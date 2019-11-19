@@ -10,7 +10,7 @@ module.exports = {
         absoluteRuntime: false,
         corejs: false,
         helpers: false,
-        regenerator: false,
+        regenerator: true,
         useESModules: false,
       },
     ],
