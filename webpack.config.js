@@ -1,7 +1,5 @@
-const fs = require('fs');
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let webpackConfigs = {
   module: {
@@ -12,78 +10,84 @@ let webpackConfigs = {
         exclude: /(node_modules|bower_components|dist)/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['env', 'es2015', 'react', 'stage-0']
-          }
-        }
+        },
       },
       {
-        test    : /\.css$/,
-        exclude : /(node_modules|bower_components|dist)/,
-        use : [
-          'style-loader',
-          'css-loader'
-        ]
+        test: /\.css$/,
+        exclude: /(node_modules|bower_components|dist)/,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         use: {
-          loader: "file-loader",
+          loader: 'file-loader',
           options: {
             name: '[path][name].[ext]',
-          }
-        }
-      }
-    ]
+          },
+        },
+      },
+    ],
   },
-  plugins: []
-}
+  plugins: [],
+};
 
 if (process.env.NODE_ENV === 'dev') {
-  webpackConfigs.mode = 'development'
-  webpackConfigs.entry = './src/example/index.js'
+  webpackConfigs.mode = 'development';
+  webpackConfigs.entry = './src/example/index.js';
 
-  webpackConfigs.plugins.push(new HtmlWebpackPlugin({
-    template: path.join(__dirname, "src/example/index.html"),
-    filename: "./index.html"
-  }))
+  webpackConfigs.plugins.push(
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src/example/index.html'),
+      filename: './index.html',
+    }),
+  );
 
   webpackConfigs.resolve = {
-    extensions: [".js", ".jsx"]
-  }
+    extensions: ['.js', '.jsx'],
+  };
 
   webpackConfigs.devServer = {
-    port: 3001
-  }
+    port: 3001,
+  };
 } else if (process.env.NODE_ENV === 'demo') {
-  webpackConfigs.target = 'web'
-  webpackConfigs.mode = 'development'
-  webpackConfigs.entry = './src/example/index.js'
+  webpackConfigs.target = 'web';
+  webpackConfigs.mode = 'development';
+  webpackConfigs.entry = './src/example/index.js';
 
   webpackConfigs.output = {
     path: path.resolve(__dirname, 'docs'),
-    filename: 'index.js'
+    filename: 'index.js',
     // libraryTarget: 'commonjs2'
-  }
+  };
 
-  webpackConfigs.plugins.push(new HtmlWebpackPlugin({
-    // hash: true,
-    template: path.join(__dirname, "src/example/index.html"),
-    filename: "index.html"
-  }))
+  webpackConfigs.plugins.push(
+    new HtmlWebpackPlugin({
+      // hash: true,
+      template: path.join(__dirname, 'src/example/index.html'),
+      filename: 'index.html',
+    }),
+  );
 } else {
-  webpackConfigs.mode = 'production'
-  webpackConfigs.entry = './src/index.js'
+  webpackConfigs.mode = 'production';
+  webpackConfigs.entry = './src/index.js';
+
+  console.log('prod');
 
   webpackConfigs.output = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    libraryTarget: 'commonjs2'
-  }
+    libraryTarget: 'commonjs2',
+  };
 
-  webpackConfigs.externals = {
-    'react': 'commonjs react'
-  }
+  webpackConfigs.externals = [
+    {
+      react: 'commonjs react',
+      'immutability-helper': 'commonjs immutability-helper',
+      '@material-ui/core/CssBaseline': 'commonjs @material-ui/core/CssBaseline',
+      smoothscroll: 'commonjs smoothscroll',
+    },
+    /^@material-ui\/.*$/,
+  ];
 }
 
-module.exports = webpackConfigs
+module.exports = webpackConfigs;
